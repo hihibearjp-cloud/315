@@ -1,619 +1,603 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Regina遊記V14</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- SheetJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  
-  <!-- React & ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- iOS PWA Settings -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Regina遊記">
-  <meta name="theme-color" content="#FFF0F5">
-
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' style='background-color:%23FFF0F5'%3E%3Crect width='100' height='100' fill='%23FFF0F5' rx='30'/%3E%3Ctext x='50' y='50' font-size='50' text-anchor='middle' dy='.35em'%3E🌸%3C/text%3E%3Ccircle cx='80' cy='20' r='10' fill='%23FF69B4' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' style='background-color:%23FFF0F5'%3E%3Crect width='100' height='100' fill='%23FFF0F5' rx='30'/%3E%3Ctext x='50' y='50' font-size='50' text-anchor='middle' dy='.35em'%3E🌸%3C/text%3E%3Ccircle cx='80' cy='20' r='10' fill='%23FF69B4' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Hi+Melody&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    body { font-family: 'Gaegu', cursive; background-color: #FFF0F5; color: #594a4e; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; user-select: none; }
-    .safe-area-top { padding-top: env(safe-area-inset-top); transition: background-color 0.3s; }
-    .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); background-color: white; }
-    
-    .app-bg {
-      background-color: #FFF0F5;
-      background-image: 
-        radial-gradient(#FFB6C1 15%, transparent 16%),
-        radial-gradient(#ADD8E6 15%, transparent 16%);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-    }
-    
-    .regina-card {
-      background: rgba(255, 255, 255, 0.95);
-      border: 2px solid #6B4D57;
-      border-radius: 20px;
-      box-shadow: 4px 4px 0px #FFB6C1;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .regina-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
-      background: linear-gradient(90deg, #FF9A9E, #FECFEF, #A18CD1, #FBC2EB);
-    }
-    .regina-card:active { transform: scale(0.98); box-shadow: 2px 2px 0px #FFB6C1; }
-    
-    .cute-input {
-      background: transparent; border: none; outline: none;
-      font-family: 'Gaegu', cursive; font-weight: bold; width: 100%;
-      color: #594a4e;
-    }
-    .cute-input::placeholder { color: #594a4e; opacity: 0.4; }
+    <!-- PWA 設定: 讓網頁變身 App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="班級小管家">
+    <meta name="format-detection" content="telephone=no">
 
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    
-    .floating-btn {
-      position: fixed; bottom: 100px; right: 24px;
-      width: 60px; height: 60px; border-radius: 50%;
-      background: #FF69B4; border: 2px solid #fff;
-      box-shadow: 0px 4px 10px rgba(255, 105, 180, 0.4);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 50; transition: all 0.2s; color: white;
-    }
-    .floating-btn:active { transform: translateY(4px); box-shadow: none; }
+    <!-- 內嵌 App Icon (黃色筆記本風格) -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F6E05E'/%3E%3Cpath d='M30 25h40M30 40h40M30 55h25' stroke='%2378350F' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='75' cy='70' r='12' fill='%23F87171'/%3E%3Cpath d='M75 64v12m-6-6h12' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F6E05E'/%3E%3Cpath d='M30 25h40M30 40h40M30 55h25' stroke='%2378350F' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='75' cy='70' r='12' fill='%23F87171'/%3E%3Cpath d='M75 64v12m-6-6h12' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 
-    .scan-btn {
-      position: fixed; bottom: 170px; right: 24px;
-      width: 50px; height: 50px; border-radius: 50%;
-      background: #A18CD1; border: 2px solid #fff;
-      box-shadow: 0px 4px 10px rgba(161, 140, 209, 0.4);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 50; transition: all 0.2s; color: white; cursor: pointer;
-    }
-    .scan-btn:active { transform: translateY(4px); box-shadow: none; }
-    
-    .fade-slide { animation: fadeSlide 0.3s ease-out; }
-    @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    <title>班級小管家 Pro</title>
 
-    .magic-text {
-      background: linear-gradient(45deg, #FF69B4, #A18CD1, #FBC2EB);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;
-    }
-    
-    .shop-tab { flex: 1; text-align: center; padding: 8px; font-weight: bold; border-radius: 12px; transition: all 0.2s; font-size: 14px; }
-    .shop-tab.active { background: #FF69B4; color: white; box-shadow: 2px 2px 0px #6B4D57; }
-    .shop-tab.active-proxy { background: #87CEEB; color: white; box-shadow: 2px 2px 0px #6B4D57; }
-    
-    .progress-container { width: 100%; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; border: 1px solid #6B4D57; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #FF9A9E, #FECFEF); transition: width 0.5s ease; }
-  </style>
-</head>
-<body class="h-screen w-screen overflow-hidden app-bg">
-  <div id="root" class="h-full w-full"></div>
+    <!-- 載入核心庫 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 
-  <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
-
-    // --- Icons ---
-    const Icon = ({ children, size = 20, className = "" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
-    );
-    const Icons = {
-      Plus: (p) => <Icon {...p}><path d="M5 12h14"/><path d="M12 5v14"/></Icon>,
-      Back: (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>,
-      Home: (p) => <Icon {...p}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Icon>,
-      Train: (p) => <Icon {...p}><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h0"/><path d="M16 15h0"/></Icon>,
-      Star: (p) => <Icon {...p}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></Icon>,
-      Food: (p) => <Icon {...p}><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="8"/><line x1="10" x2="10" y1="1" y2="8"/><line x1="14" x2="14" y1="1" y2="8"/></Icon>,
-      Wallet: (p) => <Icon {...p}><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></Icon>,
-      Cross: (p) => <Icon {...p}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></Icon>,
-      Trash: (p) => <Icon {...p}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></Icon>,
-      Download: (p) => <Icon {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></Icon>,
-      Settings: (p) => <Icon {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></Icon>,
-      Camera: (p) => <Icon {...p}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></Icon>,
-      Image: (p) => <Icon {...p}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></Icon>,
-      Magic: (p) => <Icon {...p}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></Icon>,
-      Shopping: (p) => <Icon {...p}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></Icon>,
-      Share: (p) => <Icon {...p}><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></Icon>,
-      Chart: (p) => <Icon {...p}><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></Icon>,
-      MapPin: (p) => <Icon {...p}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></Icon>,
-      Locate: (p) => <Icon {...p}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>,
-      Bag: (p) => <Icon {...p}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></Icon>,
-      Paste: (p) => <Icon {...p}><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></Icon>
-    };
-
-    // --- Configuration ---
-    const DEFAULT_PAYMENT = ['現金', '信用卡(中信)', '信用卡(富邦J)', '信用卡(國泰Cube)', '西瓜卡 (Suica)', 'ICOCA', 'PayPay'];
-    const DEFAULT_PLATFORM = ['現場支付', 'Agoda', 'Booking.com', 'Klook', 'KKday', 'Haft (官網)', 'Rakuten'];
-    const CURRENCIES = ['JPY', 'TWD', 'USD', 'KRW', 'EUR'];
-    const PRIORITIES = [ 
-      { id: 'must', label: '必買', color: '#ff6b6b' }, 
-      { id: 'want', label: '想買', color: '#feca57' }, 
-      { id: 'maybe', label: '看看', color: '#1dd1a1' } 
-    ];
-    const DEFAULT_PACKING = [
-      { id: 1, text: '護照 & 簽證', checked: false },
-      { id: 2, text: '網卡 / Wifi機', checked: false },
-      { id: 3, text: '日幣現鈔', checked: false },
-      { id: 4, text: '信用卡', checked: false },
-      { id: 5, text: '行動電源', checked: false }
-    ];
-    
-    const INITIAL_TRIP = {
-      id: 1, title: '2026 關西螃蟹橫著走 🦀', startDate: '2026-02-02', days: 10,
-      itinerary: [
-        { id: 1, date: '2/2', content: '大阪 → 17:00名門大洋渡輪', transport: '名門大洋渡輪', stay: '船上住宿', food: '船上自助餐', highlights: '瀨戶內海夜景' },
-        { id: 2, date: '2/3', content: '門司港懷舊區 → 小倉城', transport: 'JR九州', stay: '福岡 Quintessa', food: '燒咖哩', highlights: '復古車站拍照' },
-      ],
-      expenses: [],
-      shoppingList: [] 
-    };
-
-    // --- Charts Component ---
-    const PieChart = ({ data }) => {
-      const total = data.reduce((acc, item) => acc + item.value, 0);
-      let cumulativePercent = 0;
-      const getCoordinatesForPercent = (percent) => {
-        const x = Math.cos(2 * Math.PI * percent);
-        const y = Math.sin(2 * Math.PI * percent);
-        return [x, y];
-      };
-      return (
-        <div className="relative w-40 h-40 mx-auto my-4">
-          <svg viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)' }}>
-            {data.map((slice, i) => {
-              if (slice.value === 0) return null;
-              const startPercent = cumulativePercent;
-              const slicePercent = slice.value / total;
-              cumulativePercent += slicePercent;
-              const endPercent = cumulativePercent;
-              const [startX, startY] = getCoordinatesForPercent(startPercent);
-              const [endX, endY] = getCoordinatesForPercent(endPercent);
-              const largeArcFlag = slicePercent > 0.5 ? 1 : 0;
-              if (slicePercent === 1) return <circle key={i} cx="0" cy="0" r="1" fill={slice.color} />;
-              const pathData = `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
-              return <path key={i} d={pathData} fill={slice.color} stroke="white" strokeWidth="0.05" />;
-            })}
-            <circle cx="0" cy="0" r="0.6" fill="white" />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
-             <span className="text-xs font-bold text-gray-400">總支出</span>
-             <span className="text-sm font-black text-[#6B4D57]">¥{total.toLocaleString()}</span>
-          </div>
-        </div>
-      );
-    };
-
-    function App() {
-      const [trips, setTrips] = useState([]);
-      const [settings, setSettings] = useState({ payments: DEFAULT_PAYMENT, platforms: DEFAULT_PLATFORM, packingList: DEFAULT_PACKING });
-      const [view, setView] = useState('dashboard');
-      const [activeTripId, setActiveTripId] = useState(null);
-
-      // Persistence with fallback
-      useEffect(() => {
-        try {
-          const v14 = localStorage.getItem('regina_trips_v14');
-          const v13 = localStorage.getItem('regina_trips_v13');
-          const savedTrips = v14 || v13;
-          const s11 = localStorage.getItem('regina_settings_v11');
-          
-          if (savedTrips) setTrips(JSON.parse(savedTrips));
-          else setTrips([INITIAL_TRIP]);
-          
-          if (s11) {
-             const s = JSON.parse(s11);
-             if(!s.packingList) s.packingList = DEFAULT_PACKING;
-             setSettings(s);
-          }
-        } catch(e) { console.error("Load Error", e); setTrips([INITIAL_TRIP]); }
-      }, []);
-
-      useEffect(() => { 
-        if (trips.length > 0) localStorage.setItem('regina_trips_v14', JSON.stringify(trips)); 
-      }, [trips]);
-      
-      useEffect(() => { 
-        localStorage.setItem('regina_settings_v11', JSON.stringify(settings)); 
-      }, [settings]);
-
-      // Actions
-      const createTrip = (title, date, days, itineraryData = null) => {
-        const newTrip = {
-          id: Date.now(), title, startDate: date, days,
-          itinerary: itineraryData || Array.from({length: days}, (_, i) => {
-             const d = new Date(date); d.setDate(d.getDate() + i);
-             return { id: Date.now()+i, date: `${d.getMonth()+1}/${d.getDate()}`, content:'', transport:'', stay:'', food:'', highlights:'', photos: [] };
-          }),
-          expenses: [],
-          shoppingList: []
-        };
-        setTrips([...trips, newTrip]);
-        setView('dashboard');
-      };
-
-      const updateTrip = (id, data) => setTrips(trips.map(t => t.id === id ? { ...t, ...data } : t));
-      const updateSettings = (key, val) => setSettings({...settings, [key]: val});
-
-      // Excel Export
-      const exportExcel = (trip) => {
-        if (typeof XLSX === 'undefined') { alert('Excel 元件載入失敗'); return; }
-        const wb = XLSX.utils.book_new();
-        const summaryData = (trip.expenses || []).map(e => ({ 日期: e.date, 時間: e.time, 項目: e.item, 金額: e.amount, 幣別: e.currency, 類別: e.category, 支付: e.method, 備註: e.note }));
-        const wsSummary = XLSX.utils.json_to_sheet(summaryData.length ? summaryData : [{備註: "尚無資料"}]);
-        XLSX.utils.book_append_sheet(wb, wsSummary, "總支出明細");
-        trip.itinerary.forEach((day, idx) => {
-           const dayExpenses = (trip.expenses || []).filter(e => e.date === day.date).map(e => ({ 時間: e.time, 項目: e.item, 金額: e.amount, 幣別: e.currency, 支付: e.method, 備註: e.note }));
-           const dayInfo = [{ 時間: '行程', 項目: day.content }, { 時間: '交通', 項目: day.transport }, { 時間: '住宿', 項目: day.stay }, { 時間: '--- 消費明細 ---', 項目: '' }];
-           XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([...dayInfo, {}, ...dayExpenses]), `Day${idx+1}`);
-        });
-        XLSX.writeFile(wb, `${trip.title}_紀錄.xlsx`);
-      };
-
-      return (
-        <div className="h-full w-full">
-          {view === 'dashboard' && <Dashboard trips={trips} onCreate={createTrip} onOpen={(id) => { setActiveTripId(id); setView('trip'); }} settings={settings} onUpdateSettings={updateSettings} />}
-          {view === 'trip' && activeTripId && <TripContainer trip={trips.find(t => t.id === activeTripId)} onBack={() => setView('dashboard')} onUpdate={(data) => updateTrip(activeTripId, data)} onExport={() => exportExcel(trips.find(t => t.id === activeTripId))} settings={settings} />}
-        </div>
-      );
-    }
-
-    // --- Dashboard ---
-    function Dashboard({ trips, onCreate, onOpen, settings, onUpdateSettings }) {
-      const [showCreate, setShowCreate] = useState(false);
-      const [showSettings, setShowSettings] = useState(false);
-      const [showMagic, setShowMagic] = useState(false);
-      const [showPacking, setShowPacking] = useState(false);
-      const [form, setForm] = useState({ title: '', date: '', days: 5 });
-
-      const togglePacking = (id) => onUpdateSettings('packingList', settings.packingList.map(item => item.id === id ? { ...item, checked: !item.checked } : item));
-      const addPacking = () => { const text = prompt('新增物品：'); if(text) onUpdateSettings('packingList', [...settings.packingList, { id: Date.now(), text, checked: false }]); };
-      const removePacking = (id) => { if(confirm('刪除?')) onUpdateSettings('packingList', settings.packingList.filter(item => item.id !== id)); };
-      const handleLocate = () => {
-        if (!navigator.geolocation) { alert('不支援定位'); return; }
-        navigator.geolocation.getCurrentPosition((pos) => { window.open(`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`, '_blank'); }, () => { alert('無法取得位置'); });
-      };
-
-      return (
-        <div className="h-full flex flex-col p-6 app-bg text-[#594a4e] relative overflow-hidden">
-          <div className="safe-area-top mb-4"></div>
-          <div className="flex justify-between items-center mb-8 relative z-10">
-            <div><h1 className="text-3xl font-black tracking-wider magic-text">Regina <br/><span className="text-2xl text-[#594a4e]">走跳遊記</span> 🧭</h1></div>
-            <div className="flex gap-2">
-               <button onClick={handleLocate} className="p-2 bg-white rounded-full border-2 border-[#6B4D57] shadow-sm"><Icons.MapPin /></button>
-               <button onClick={() => setShowSettings(true)} className="p-2 bg-white rounded-full border-2 border-[#6B4D57] shadow-sm"><Icons.Settings /></button>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar pb-20 relative z-10">
-            <div onClick={() => setShowPacking(true)} className="bg-white/80 p-4 rounded-2xl border-2 border-[#6B4D57]/20 flex items-center justify-between cursor-pointer">
-               <div className="flex items-center gap-3"><div className="bg-[#FFF0F5] p-2 rounded-full"><Icons.Bag size={20} className="text-[#FF69B4]" /></div><div><h3 className="font-bold">行李檢查表</h3><p className="text-xs text-gray-400">出發前別忘了...</p></div></div>
-               <span className="font-bold text-[#FF69B4]">{settings.packingList.filter(i=>i.checked).length}/{settings.packingList.length}</span>
-            </div>
-            {trips.map(trip => {
-               const totalJPY = (trip.expenses||[]).filter(e=>e.currency==='JPY').reduce((a,c)=>a+c.amount,0);
-               return (
-                <div key={trip.id} onClick={() => onOpen(trip.id)} className="regina-card p-5 cursor-pointer group">
-                   <div className="flex justify-between items-start mb-2"><h2 className="text-2xl font-bold">{trip.title}</h2><div className="text-2xl group-hover:scale-125 transition-transform">✈️</div></div>
-                   <p className="font-bold opacity-60 mb-4">{trip.startDate} • {trip.days} 天</p>
-                   <div className="flex gap-2"><span className="bg-[#FFF0F5] px-3 py-1 rounded-full text-xs font-bold border border-[#6B4D57]/20 text-[#6B4D57]">支出: ¥{totalJPY.toLocaleString()}</span></div>
-                </div>
-               );
-            })}
-            <div className="flex gap-3">
-                <button onClick={() => setShowCreate(true)} className="flex-1 border-2 border-dashed border-[#6B4D57]/30 rounded-2xl p-6 font-bold text-[#6B4D57]/50 hover:bg-white hover:border-[#FFB6C1] transition-colors flex flex-col items-center gap-2 bg-white/50 backdrop-blur-sm"><Icons.Plus size={24} /> 建立</button>
-                <button onClick={() => setShowMagic(true)} className="flex-1 bg-gradient-to-br from-[#FFF0F5] to-[#E6E6FA] border-2 border-[#6B4D57]/20 rounded-2xl p-6 font-bold text-[#6B4D57] shadow-sm hover:shadow-md transition-all flex flex-col items-center gap-2"><div className="bg-white p-2 rounded-full shadow-inner"><Icons.Paste size={24} className="text-[#9370DB]" /></div><span className="magic-text text-sm">智慧解析</span></button>
-            </div>
-          </div>
-          {showCreate && <Modal title="新的冒險！" onClose={() => setShowCreate(false)}><div className="space-y-3"><input className="w-full bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none border-2 border-transparent focus:border-[#FFB6C1]" placeholder="旅程名稱" value={form.title} onChange={e=>setForm({...form, title: e.target.value})} /><div className="flex gap-2"><input type="date" className="w-full bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none" value={form.date} onChange={e=>setForm({...form, date: e.target.value})} /><input type="number" placeholder="天" className="w-20 bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none" value={form.days} onChange={e=>setForm({...form, days: e.target.value})} /></div><button onClick={() => { if(form.title && form.date) { onCreate(form.title, form.date, form.days); setShowCreate(false); } }} className="w-full bg-[#FFB6C1] text-white border-2 border-[#6B4D57] rounded-xl py-3 font-bold mt-2 shadow-[2px_2px_0px_#6B4D57] active:translate-y-1 active:shadow-none transition-all">出發！</button></div></Modal>}
-          {showSettings && <Modal title="設定選項" onClose={() => setShowSettings(false)}><div className="space-y-6 max-h-[60vh] overflow-y-auto no-scrollbar"><SettingsList title="💳 支付方式" items={settings.payments} onUpdate={(items) => onUpdateSettings('payments', items)} /><SettingsList title="🏨 訂房平台" items={settings.platforms} onUpdate={(items) => onUpdateSettings('platforms', items)} /></div></Modal>}
-          {showMagic && <MagicModal onClose={() => setShowMagic(false)} onCreate={onCreate} />}
-          {showPacking && <Modal title="🧳 行李清單" onClose={() => setShowPacking(false)}><div className="max-h-[50vh] overflow-y-auto space-y-2 mb-4">{settings.packingList.map(item => (<div key={item.id} className="flex items-center justify-between bg-[#FFF0F5] p-3 rounded-xl border border-[#FFB6C1]/30"><div className="flex items-center gap-3 cursor-pointer" onClick={() => togglePacking(item.id)}><div className={`w-5 h-5 rounded border-2 border-[#6B4D57] flex items-center justify-center ${item.checked ? 'bg-[#6B4D57] text-white' : 'bg-white'}`}>{item.checked && '✓'}</div><span className={`font-bold ${item.checked ? 'line-through opacity-50' : ''}`}>{item.text}</span></div><button onClick={() => removePacking(item.id)} className="text-red-300 hover:text-red-500"><Icons.Cross size={14}/></button></div>))}</div><button onClick={addPacking} className="w-full border-2 border-dashed border-[#6B4D57]/30 rounded-xl p-3 font-bold text-[#6B4D57]/50">+ 新增物品</button></Modal>}
-        </div>
-      );
-    }
-
-    // --- Smart Parse Helper (No Key) ---
-    function MagicModal({ onClose, onCreate }) {
-      const [text, setText] = useState('');
-      
-      const handleParse = () => {
-        if(!text) return;
+    <style>
+        /* iOS App 級別優化 CSS */
+        :root {
+            --sat: env(safe-area-inset-top);
+            --sab: env(safe-area-inset-bottom);
+        }
+        body {
+            background-color: #FEF9F2;
+            background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'ZCOOL KuaiLe', 'Noto Sans TC', sans-serif;
+            color: #4B2C20; /* 深咖啡色 */
+            -webkit-user-select: none; /* 禁止選取文字 */
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none; /* 禁止橡皮筋效果 */
+            position: fixed; /* 固定全螢幕 */
+            top: 0; left: 0; right: 0; bottom: 0;
+            padding-top: var(--sat);
+            padding-bottom: var(--sab);
+        }
+        #root {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+        }
         
-        // 1. Try to guess title
-        const titleMatch = text.match(/^(.*?)[\n\r]/);
-        const title = titleMatch ? titleMatch[1].substring(0, 20) : "匯入的行程";
-        
-        // 2. Try to guess start date (YYYY/MM/DD or MM/DD)
-        const dateMatch = text.match(/\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/) || text.match(/\d{1,2}[/-]\d{1,2}/);
-        let startDate = new Date().toISOString().split('T')[0];
-        if (dateMatch) {
-           let dStr = dateMatch[0].replace(/\./g, '-').replace(/\//g, '-');
-           if(dStr.length < 6) { // MM-DD
-              const year = new Date().getFullYear();
-              dStr = `${year}-${dStr}`;
-           }
-           // Simple validation
-           if(!isNaN(new Date(dStr).getTime())) startDate = dStr;
+        /* 3D 按鈕 */
+        .btn-3d {
+            transition: all 0.1s;
+            border-bottom: 4px solid rgba(0,0,0,0.2);
+            active: border-bottom-width: 0;
+            transform: translateY(0);
+        }
+        .btn-3d:active {
+            transform: translateY(2px);
+            border-bottom: 2px solid rgba(0,0,0,0.2);
         }
 
-        // 3. Simple Splitting by Date to guess days
-        // Look for patterns like "Day 1", "2/2", "2月2日"
-        const lines = text.split('\n');
-        const daysContent = [];
-        let currentContent = "";
+        /* 輸入框優化 */
+        .input-ios {
+            font-size: 1.1rem; /* 防止 iOS 自動縮放 */
+            background: #FFF;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            outline: none;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .input-ios:focus { border-color: #FCD34D; }
+
+        /* 隱藏捲軸 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { 
+            User, Users, Clock, BookOpen, AlertCircle, CheckCircle2, MessageCircle, 
+            MicOff, Coffee, FileWarning, Edit3, Trash2, Plus, X, Briefcase, Stethoscope, 
+            Palmtree, HelpCircle, Star, PackageX, ClipboardCopy, Download, Settings, 
+            FileSpreadsheet, List, UserCog, Share, LayoutGrid, Info, PenTool, AlertTriangle, 
+            Megaphone, Send, Tablet, Smartphone, Save
+        } = window.lucideReact;
+
+        // --- 核心資料結構 ---
+        const DB_KEY = 'classManager_Pro_DB'; // 本地資料庫金鑰
         
-        // Regex for date line start
-        const dateLineRegex = /^(\d{1,2}[\/\-]\d{1,2}|Day\s?\d+|第\d+天)/i;
-        
-        lines.forEach(line => {
-           if(dateLineRegex.test(line.trim())) {
-              if(currentContent) daysContent.push(currentContent);
-              currentContent = line + "\n";
-           } else {
-              currentContent += line + "\n";
-           }
-        });
-        if(currentContent) daysContent.push(currentContent);
-        
-        const days = Math.max(daysContent.length, 1);
-        
-        const fullItinerary = Array.from({length: days}, (_, i) => {
-           const d = new Date(startDate); d.setDate(new Date(startDate).getDate() + i);
-           const content = daysContent[i] || "";
-           return { 
-             id: Date.now() + i, 
-             date: `${d.getMonth()+1}/${d.getDate()}`, 
-             content: content.trim(), 
-             transport: '', stay: '', food: '', highlights: '', photos: [] 
-           };
-        });
+        const PERIODS = [
+            { id: 'early', label: '早修' }, { id: 'p1', label: '第一節' }, { id: 'p2', label: '第二節' },
+            { id: 'p3', label: '第三節' }, { id: 'p4', label: '第四節' }, { id: 'lunch', label: '午餐' },
+            { id: 'nap', label: '午休' }, { id: 'p5', label: '第五節' }, { id: 'p6', label: '第六節' },
+            { id: 'p7', label: '第七節' }, { id: 'p8', label: '第八節' }
+        ];
 
-        onCreate(title, startDate, days, fullItinerary);
-        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-        onClose();
-      };
+        const DEFAULT_BEHAVIORS = [
+            { id: 'item_missing', label: '物品未帶', icon: 'PackageX', color: 'bg-pink-200' },
+            { id: 'late_class', label: '晚進教室', icon: 'Clock', color: 'bg-yellow-200' },
+            { id: 'chat', label: '聊天干擾', icon: 'MessageCircle', color: 'bg-yellow-200' },
+            { id: 'sleep', label: '打瞌睡', icon: 'Coffee', color: 'bg-pink-200' },
+            { id: 'no_hw', label: '作業未交', icon: 'FileWarning', color: 'bg-red-200' },
+            { id: 'other', label: '其他', icon: 'PenTool', color: 'bg-blue-200' }
+        ];
 
-      return (
-        <Modal title="🪄 智慧貼貼匯入" onClose={onClose}>
-           <div className="space-y-4">
-             <div className="bg-yellow-50 p-3 rounded-xl text-xs text-[#6B4D57]/80">
-               <strong>💡 聰明用法：</strong><br/>
-               1. 去相簿打開行程表照片<br/>
-               2. 長按複製裡面的文字 (手機內建功能)<br/>
-               3. 貼在下面，我幫你排好！
-             </div>
-             <textarea 
-               className="w-full h-40 bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none text-sm resize-none border-2 border-transparent focus:border-[#FFB6C1]" 
-               placeholder="在此貼上行程文字..."
-               value={text}
-               onChange={e => setText(e.target.value)}
-             />
-             <button onClick={handleParse} className="w-full bg-gradient-to-r from-[#FF9A9E] to-[#FECFEF] text-white font-bold py-3 rounded-2xl shadow-md active:scale-95 transition">
-               ✨ 開始解析
-             </button>
-           </div>
-        </Modal>
-      );
-    }
+        const ATTENDANCE_TYPES = [
+            { id: 'late', label: '遲到', icon: Clock, color: 'bg-yellow-100' },
+            { id: 'sick', label: '病假', icon: Stethoscope, color: 'bg-green-100' },
+            { id: 'official', label: '公假', icon: Briefcase, color: 'bg-blue-100' },
+            { id: 'personal', label: '事假', icon: Palmtree, color: 'bg-purple-100' },
+            { id: 'absent', label: '缺席', icon: AlertCircle, color: 'bg-red-100' }
+        ];
 
-    // --- Simple Receipt Parser (No Key) ---
-    function ReceiptModal({ onClose, onConfirm }) {
-      const [text, setText] = useState('');
-      
-      const parse = () => {
-        // Find biggest number
-        const numbers = text.match(/\d{1,3}(,\d{3})*(\.\d+)?/g) || [];
-        const cleanNums = numbers.map(n => parseFloat(n.replace(/,/g, ''))).filter(n => !isNaN(n));
-        const maxNum = cleanNums.length > 0 ? Math.max(...cleanNums) : '';
-        
-        onConfirm({
-           amount: maxNum,
-           item: '收據消費',
-           note: text.substring(0, 50) + (text.length>50?'...':'')
-        });
-      };
+        const CONTACT_BOOK_TYPES = [
+            { id: 'cb_missing', label: '聯絡簿缺交', icon: X, color: 'bg-red-100' },
+            { id: 'cb_good', label: '聯絡簿優良', icon: Star, color: 'bg-green-100' }
+        ];
 
-      return (
-        <Modal title="🧾 收據貼貼" onClose={onClose}>
-           <div className="space-y-4">
-             <div className="bg-blue-50 p-3 rounded-xl text-xs text-[#6B4D57]/80">
-               <strong>💡 沒空打字？</strong><br/>
-               用手機相機拍收據 -> 複製文字 -> 貼在下面<br/>
-               我幫你抓金額！
-             </div>
-             <textarea 
-               className="w-full h-32 bg-[#F0F8FF] p-3 rounded-xl font-bold outline-none text-sm resize-none" 
-               placeholder="貼上收據文字..."
-               value={text}
-               onChange={e => setText(e.target.value)}
-             />
-             <button onClick={parse} className="w-full bg-[#A18CD1] text-white font-bold py-3 rounded-2xl shadow-md active:scale-95 transition">
-               🔍 抓取金額
-             </button>
-           </div>
-        </Modal>
-      );
-    }
+        const ICON_MAP = { PackageX, Clock, MicOff, AlertCircle, MessageCircle, FileWarning, BookOpen, Coffee, HelpCircle, PenTool };
 
-    function SettingsList({ title, items, onUpdate }) {
-      const [newItem, setNewItem] = useState('');
-      const add = () => { if(newItem){ onUpdate([...items, newItem]); setNewItem(''); } };
-      const remove = (idx) => { onUpdate(items.filter((_, i) => i !== idx)); };
-      return (
-        <div>
-          <h4 className="font-bold mb-2 text-[#6B4D57]">{title}</h4>
-          <div className="flex gap-2 mb-2">
-            <input className="flex-1 bg-[#FFF0F5] px-3 rounded-lg font-bold outline-none" value={newItem} onChange={e=>setNewItem(e.target.value)} placeholder="新增..." />
-            <button onClick={add} className="bg-[#FFB6C1] text-white w-10 h-10 rounded-lg border-2 border-[#6B4D57] flex items-center justify-center shadow-sm"><Icons.Plus size={18}/></button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {items.map((item, idx) => (
-              <span key={idx} className="bg-white border border-[#FFB6C1] px-3 py-1 rounded-full text-sm font-bold flex gap-2 text-[#6B4D57] shadow-sm">
-                {item}
-                <button onClick={() => remove(idx)} className="text-red-400 hover:text-red-600"><Icons.Cross size={14}/></button>
-              </span>
-            ))}
-          </div>
-        </div>
-      );
-    }
+        // --- App Component ---
+        function App() {
+            const [activeTab, setActiveTab] = useState('basic');
+            const scrollRef = useRef(null);
 
-    function Modal({ title, onClose, children }) {
-      return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-6 z-50 animate-[fadeSlide_0.2s]">
-          <div className="bg-white/95 backdrop-blur border-2 border-[#6B4D57] rounded-3xl p-6 w-full max-w-sm shadow-2xl relative">
-            <button onClick={onClose} className="absolute top-4 right-4"><Icons.Cross /></button>
-            <h3 className="text-2xl font-black mb-4 text-center text-[#6B4D57]">{title}</h3>
-            {children}
-          </div>
-        </div>
-      );
-    }
+            // 1. 日期狀態
+            const [currentDate, setCurrentDate] = useState(() => {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                return new Date(now.getTime() - offset).toISOString().split('T')[0];
+            });
 
-    // --- Container ---
-    function TripContainer({ trip, onBack, onUpdate, onExport, settings }) {
-      const [tab, setTab] = useState('itinerary'); 
-      return (
-        <div className="h-full flex flex-col app-bg text-[#594a4e] transition-colors duration-500 relative">
-          <div className="safe-area-top bg-[#FFF0F5]"></div>
-          <div className="p-4 flex items-center justify-between shadow-sm z-20 bg-[#FFF0F5]/90 backdrop-blur-sm sticky top-0">
-            <button onClick={onBack} className="bg-white border-2 border-[#6B4D57] rounded-full p-2 hover:bg-gray-50 transition"><Icons.Back /></button>
-            <h2 className="font-black text-lg truncate max-w-[150px]">{trip.title}</h2>
-            <button onClick={onExport} className="bg-[#207245] text-white rounded-full px-3 py-1 text-xs font-bold shadow-md hover:bg-[#185c37] flex items-center gap-1">Excel <Icons.Download size={14}/></button>
-          </div>
-          <div className="flex-1 overflow-hidden relative">
-            {tab === 'itinerary' && <ItineraryView trip={trip} onUpdate={onUpdate} settings={settings} />}
-            {tab === 'shopping' && <ShoppingView trip={trip} onUpdate={onUpdate} settings={settings} />}
-            {tab === 'stats' && <StatsView trip={trip} />}
-          </div>
-          <div className="safe-area-bottom bg-white border-t-2 border-[#FFB6C1] p-2 flex justify-around shadow-[0_-4px_10px_rgba(255,182,193,0.2)] z-30">
-            <button onClick={() => setTab('itinerary')} className={`flex flex-col items-center p-2 rounded-xl w-20 transition-all ${tab === 'itinerary' ? 'text-[#FF69B4] -translate-y-1' : 'text-gray-400'}`}><Icons.Home size={24} /><span className="text-xs font-bold">行程</span></button>
-            <button onClick={() => setTab('shopping')} className={`flex flex-col items-center p-2 rounded-xl w-20 transition-all ${tab === 'shopping' ? 'text-[#FF69B4] -translate-y-1' : 'text-gray-400'}`}><Icons.Shopping size={24} /><span className="text-xs font-bold">購物</span></button>
-            <button onClick={() => setTab('stats')} className={`flex flex-col items-center p-2 rounded-xl w-20 transition-all ${tab === 'stats' ? 'text-[#FF69B4] -translate-y-1' : 'text-gray-400'}`}><Icons.Chart size={24} /><span className="text-xs font-bold">統計</span></button>
-          </div>
-        </div>
-      );
-    }
+            // 2. 全局數據 (從 LocalStorage 讀取)
+            const [allData, setAllData] = useState(() => {
+                try {
+                    const saved = localStorage.getItem(DB_KEY);
+                    return saved ? JSON.parse(saved) : {};
+                } catch (e) { console.error("Load Error", e); return {}; }
+            });
 
-    // --- Stats View (Same as V11) ---
-    function StatsView({ trip }) {
-      const expenses = trip.expenses || [];
-      const totalJPY = expenses.filter(e => e.currency === 'JPY').reduce((acc, curr) => acc + curr.amount, 0);
-      const catData = ['飲食', '交通', '住宿', '購物', '門票', '其他'].map(cat => ({ label: cat, value: expenses.filter(e => e.category === cat && e.currency === 'JPY').reduce((a,c) => a + c.amount, 0), color: { '飲食': '#FF9F43', '交通': '#54a0ff', '住宿': '#5f27cd', '購物': '#ff6b81', '門票': '#1dd1a1', '其他': '#8395a7' }[cat] })).filter(d => d.value > 0);
-      const dayData = trip.itinerary.map(day => ({ date: day.date, value: expenses.filter(e => e.date === day.date && e.currency === 'JPY').reduce((a,c) => a+c.amount, 0) }));
-      const maxDayVal = Math.max(...dayData.map(d => d.value), 1);
-      const methodData = Object.entries(expenses.reduce((acc, curr) => { if(curr.currency === 'JPY') acc[curr.method] = (acc[curr.method] || 0) + curr.amount; return acc; }, {})).map(([k, v]) => ({ label: k, value: v }));
+            // 3. 當日數據 (Derived State)
+            const [week, setWeek] = useState('');
+            const [dutyOfficer, setDutyOfficer] = useState('');
+            const [dutyStudent, setDutyStudent] = useState('');
+            const [attendanceData, setAttendanceData] = useState({});
+            const [missingData, setMissingData] = useState({});
+            const [classLogData, setClassLogData] = useState({});
+            const [periodNotes, setPeriodNotes] = useState({});
+            const [incidentLog, setIncidentLog] = useState('');
 
-      return (
-        <div className="h-full overflow-y-auto p-4 space-y-4 no-scrollbar pb-24">
-          <div className="regina-card p-4 bg-white text-center"><h3 className="font-bold text-[#6B4D57] opacity-60 mb-2">總支出 (日圓)</h3><PieChart data={catData} /><div className="grid grid-cols-2 gap-2 text-left mt-4">{catData.map(d => (<div key={d.label} className="flex items-center gap-2 text-xs font-bold"><span className="w-3 h-3 rounded-full" style={{background: d.color}}></span><span>{d.label}</span><span className="ml-auto text-gray-500">¥{d.value.toLocaleString()}</span></div>))}</div></div>
-          <div className="regina-card p-4 bg-white"><h3 className="font-bold text-[#6B4D57] opacity-60 mb-4">每日趨勢</h3><div className="flex items-end gap-2 h-32 overflow-x-auto no-scrollbar pb-2">{dayData.map((d, i) => (<div key={i} className="flex flex-col items-center flex-1 min-w-[30px]"><div className="w-full bg-[#FFB6C1] rounded-t-md transition-all relative group" style={{height: `${(d.value/maxDayVal)*100}%`}}></div><span className="text-[10px] text-gray-400 mt-1">{d.date.split('/')[1]}</span></div>))}</div></div>
-          <div className="regina-card p-4 bg-white"><h3 className="font-bold text-[#6B4D57] opacity-60 mb-2">支付占比</h3>{methodData.map(d => (<div key={d.label} className="mb-2"><div className="flex justify-between text-xs font-bold mb-1"><span>{d.label}</span><span>¥{d.value.toLocaleString()}</span></div><div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-[#AEC6CF] h-2 rounded-full" style={{width: `${(d.value/totalJPY)*100}%`}}></div></div></div>))}</div>
-        </div>
-      );
-    }
+            // 4. 設定數據
+            const [students, setStudents] = useState(() => {
+                try { return JSON.parse(localStorage.getItem('cm_students')) || Array.from({length:30},(_,i)=>({id:i+1,name:`${i+1}號`})); } catch { return []; }
+            });
+            const [subjects, setSubjects] = useState(() => {
+                try { return JSON.parse(localStorage.getItem('cm_subjects')) || [{id:'chi',label:'國文'},{id:'eng',label:'英文'},{id:'math',label:'數學'}]; } catch { return []; }
+            });
+            const [behaviors, setBehaviors] = useState(() => {
+                try { return JSON.parse(localStorage.getItem('cm_behaviors')) || DEFAULT_BEHAVIORS; } catch { return DEFAULT_BEHAVIORS; }
+            });
 
-    // --- Itinerary View ---
-    function ItineraryView({ trip, onUpdate, settings }) {
-      const [dayIdx, setDayIdx] = useState(0);
-      const [showExpModal, setShowExpModal] = useState(false);
-      const [showReceipt, setShowReceipt] = useState(false);
-      const [expForm, setExpForm] = useState({ item: '', amount: '', currency: 'JPY', method: settings.payments[0], platform: '現場支付', note: '', time: '' });
+            // 5. UI 狀態
+            const [selectorConfig, setSelectorConfig] = useState({ open: false, type: '', category: '', period: '' });
+            const [teacherNote, setTeacherNote] = useState(() => localStorage.getItem('cm_teacherNote') || '');
+            const [currentLogPeriod, setCurrentLogPeriod] = useState('p1');
+            const [bulkNames, setBulkNames] = useState('');
+            const [newSubName, setNewSubName] = useState('');
+            const [selectedReportStudent, setSelectedReportStudent] = useState(1);
+            
+            // --- 核心邏輯: 讀取當日數據 ---
+            useEffect(() => {
+                const day = allData[currentDate] || {};
+                setWeek(day.week || '');
+                setDutyOfficer(day.dutyOfficer || '');
+                setDutyStudent(day.dutyStudent || '');
+                setAttendanceData(day.attendanceData || {});
+                setMissingData(day.missingData || {});
+                setClassLogData(day.classLogData || {});
+                setPeriodNotes(day.periodNotes || {});
+                setIncidentLog(day.incidentLog || '');
+            }, [currentDate, allData]);
 
-      const day = trip.itinerary[dayIdx];
-      const dayExpenses = (trip.expenses || []).filter(e => e.date === day.date);
-      const dayTotalJPY = dayExpenses.filter(e=>e.currency==='JPY').reduce((a,c) => a + c.amount, 0);
-      const paymentStats = useMemo(() => { const s={}; (trip.expenses||[]).forEach(e=>{ if(!s[e.method])s[e.method]=0; if(e.currency==='JPY')s[e.method]+=e.amount; }); return s; }, [trip.expenses]);
-      const THEME_COLORS = [{ bg: '#FFD1DC', border: '#FF69B4' }, { bg: '#AEC6CF', border: '#5F9EA0' }, { bg: '#FDFD96', border: '#DAA520' }, { bg: '#B19CD9', border: '#9370DB' }];
-      
-      const updateDay = (field, val) => { const newItin = [...trip.itinerary]; newItin[dayIdx] = { ...newItin[dayIdx], [field]: val }; onUpdate({ itinerary: newItin }); };
-      
-      const handlePhotoUpload = (e) => {
-        const file = e.target.files[0]; if(!file)return;
-        const reader=new FileReader(); reader.onload=(ev)=>{const img=new Image();img.onload=()=>{const cvs=document.createElement('canvas');const ctx=cvs.getContext('2d');let w=img.width,h=img.height;const MAX=800;if(w>h){if(w>MAX){h*=MAX/w;w=MAX}}else{if(h>MAX){w*=MAX/h;h=MAX}}cvs.width=w;cvs.height=h;ctx.drawImage(img,0,0,w,h);updateDay('photos',[...(day.photos||[]),cvs.toDataURL('image/jpeg',0.7)])};img.src=ev.target.result};reader.readAsDataURL(file);
-      };
-      const removePhoto = (idx) => { if(confirm('刪除?')) updateDay('photos', (day.photos || []).filter((_, i) => i !== idx)); };
+            // --- 核心邏輯: 自動存檔 (Debounce) ---
+            useEffect(() => {
+                const handler = setTimeout(() => {
+                    setAllData(prev => {
+                        const newData = {
+                            ...prev,
+                            [currentDate]: {
+                                week, dutyOfficer, dutyStudent,
+                                attendanceData, missingData, classLogData,
+                                periodNotes, incidentLog
+                            }
+                        };
+                        localStorage.setItem(DB_KEY, JSON.stringify(newData));
+                        return newData;
+                    });
+                }, 800); // 延遲 0.8秒 寫入，提升效能
+                return () => clearTimeout(handler);
+            }, [week, dutyOfficer, dutyStudent, attendanceData, missingData, classLogData, periodNotes, incidentLog]);
 
-      const openAdd = (overrides = {}) => {
-        const now = new Date();
-        const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        setExpForm({ ...expForm, item:'', amount:'', note:'', time: timeStr, ...overrides });
-        setShowExpModal(true);
-      };
+            // --- 設定存檔 ---
+            useEffect(() => { localStorage.setItem('cm_students', JSON.stringify(students)); }, [students]);
+            useEffect(() => { localStorage.setItem('cm_subjects', JSON.stringify(subjects)); }, [subjects]);
+            useEffect(() => { localStorage.setItem('cm_behaviors', JSON.stringify(behaviors)); }, [behaviors]);
+            useEffect(() => { localStorage.setItem('cm_teacherNote', teacherNote); }, [teacherNote]);
+            useEffect(() => { if(scrollRef.current) scrollRef.current.scrollTop = 0; }, [activeTab]);
 
-      const handleReceiptData = (data) => {
-        setShowReceipt(false);
-        openAdd({ item: data.item, amount: data.amount, note: data.note });
-      };
+            // --- 操作函數 ---
+            const toggleStudent = (sId) => {
+                const { type, category, period } = selectorConfig;
+                if(type === 'att') {
+                    setAttendanceData(prev => {
+                        const list = prev[category] || [];
+                        return { ...prev, [category]: list.includes(sId) ? list.filter(id=>id!==sId) : [...list, sId] };
+                    });
+                } else if (type === 'miss') {
+                    setMissingData(prev => {
+                        const list = prev[category] || [];
+                        return { ...prev, [category]: list.includes(sId) ? list.filter(id=>id!==sId) : [...list, sId] };
+                    });
+                } else if (type === 'log') {
+                    setClassLogData(prev => {
+                        const periodData = prev[period] || {};
+                        const list = periodData[category] || [];
+                        return { ...prev, [period]: { ...periodData, [category]: list.includes(sId) ? list.filter(id=>id!==sId) : [...list, sId] } };
+                    });
+                }
+            };
 
-      const addExpense = () => { 
-        if(expForm.item&&expForm.amount){ 
-          onUpdate({ expenses: [...trip.expenses, { id: Date.now(), date: day.date, item: expForm.item, amount: parseFloat(expForm.amount), currency: expForm.currency, category: '一般', method: expForm.method, platform: expForm.platform, note: expForm.note, time: expForm.time }] }); 
-          setShowExpModal(false); 
-        } 
-      };
-      const deleteExpense = (id) => { if(confirm('刪除?')) onUpdate({ expenses: trip.expenses.filter(e => e.id !== id) }); };
-      const openMap = (query) => { if(!query) return; window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank'); };
+            const getSelectedList = () => {
+                const { type, category, period } = selectorConfig;
+                if(type === 'att') return attendanceData[category] || [];
+                if(type === 'miss') return missingData[category] || [];
+                if(type === 'log') return classLogData[period]?.[category] || [];
+                return [];
+            };
 
-      return (
-        <div className="h-full flex flex-col">
-          <div className="pb-2 px-4 overflow-x-auto whitespace-nowrap no-scrollbar flex gap-2 snap-x pt-2 shrink-0">
-            {trip.itinerary.map((d, i) => (
-              <button key={d.id} onClick={() => setDayIdx(i)} className={`snap-center inline-flex flex-col items-center justify-center w-16 h-20 rounded-2xl border-2 transition-all relative ${i === dayIdx ? 'shadow-md -translate-y-1 bg-white' : 'bg-white/50 border-transparent scale-90'}`} style={{ borderColor: i === dayIdx ? THEME_COLORS[i%4].border : 'transparent' }}>
-                {i === dayIdx && <div className="absolute -top-3 w-8 h-8 rounded-full z-[-1]" style={{background: THEME_COLORS[i%4].bg}}></div>}
-                <span className="text-xs font-bold opacity-60">Day {i+1}</span><span className="text-lg font-black">{d.date}</span>
-              </button>
-            ))}
-          </div>
-          <div className="flex-1 overflow-y-auto p-4 pb-24 space-y-4 no-scrollbar">
-            <div className="regina-card p-4 fade-slide bg-[#FFF0F5]"><div className="flex justify-between items-end mb-2"><span className="text-xs font-bold opacity-50">今日花費 (JPY)</span><span className="text-3xl font-black text-[#6B4D57]">¥{dayTotalJPY.toLocaleString()}</span></div><div className="h-[1px] bg-[#6B4D57]/20 mb-2"></div><div className="flex gap-2 overflow-x-auto no-scrollbar">{Object.entries(paymentStats).map(([method, amt]) => amt > 0 && (<span key={method} className="text-[10px] bg-white px-2 py-1 rounded border border-[#6B4D57]/10 whitespace-nowrap">{method}: ¥{amt.toLocaleString()}</span>))}</div></div>
-            <div className="regina-card p-4 fade-slide" style={{animationDelay: '0.05s'}}><div className="flex justify-between items-center mb-3"><div className="flex items-center gap-2 text-[#6B4D57]"><Icons.Image size={18} /> <span className="font-bold">行程快照</span></div><label className="bg-[#FFF0F5] px-3 py-1 rounded-full text-xs font-bold border border-[#6B4D57] flex items-center gap-1 cursor-pointer active:scale-95 transition"><Icons.Camera size={14} /> 拍照<input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhotoUpload} /></label></div>{(day.photos || []).length === 0 ? <div className="h-24 border-2 border-dashed border-[#6B4D57]/20 rounded-xl flex flex-col items-center justify-center text-[#6B4D57]/30 text-sm font-bold bg-white/50"><span className="text-2xl mb-1">📸</span>拍下菜單或時刻表吧</div> : <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">{day.photos.map((photo, idx) => (<div key={idx} className="relative shrink-0 w-32 h-32 rounded-xl overflow-hidden border-2 border-[#6B4D57] shadow-sm group"><img src={photo} className="w-full h-full object-cover" /><button onClick={() => removePhoto(idx)} className="absolute top-1 right-1 bg-red-400 text-white rounded-full p-1 shadow opacity-0 group-hover:opacity-100 transition"><Icons.Cross size={12}/></button></div>))}</div>}</div>
-            <div className="regina-card p-4 fade-slide" style={{animationDelay: '0.1s'}}><div className="flex justify-between items-center mb-2 text-[#E6B325]"><div className="flex items-center gap-2"><Icons.Home size={18} /> <span className="font-bold">今日行程</span></div><button onClick={() => openMap(day.content)} className="text-[#6B4D57]/50 hover:text-[#6B4D57]"><Icons.MapPin size={16}/></button></div><textarea className="cute-input text-lg resize-none h-20" placeholder="今天要去做什麼呢..." value={day.content} onChange={e => updateDay('content', e.target.value)} /></div>
-            <div className="grid grid-cols-2 gap-3 fade-slide" style={{animationDelay: '0.15s'}}><div className="regina-card p-3"><div className="flex justify-between mb-1 text-[#547C96] text-sm font-bold"><div className="flex gap-1"><Icons.Train size={16} /> 交通</div><button onClick={() => openMap(day.transport)}><Icons.MapPin size={14}/></button></div><input className="cute-input text-sm" placeholder="移動方式" value={day.transport} onChange={e => updateDay('transport', e.target.value)} /></div><div className="regina-card p-3"><div className="flex justify-between mb-1 text-[#D65F7A] text-sm font-bold"><div className="flex gap-1"><Icons.Star size={16} /> 亮點</div><button onClick={() => openMap(day.highlights)}><Icons.MapPin size={14}/></button></div><input className="cute-input text-sm" placeholder="必看必玩" value={day.highlights} onChange={e => updateDay('highlights', e.target.value)} /></div></div>
-            <div className="regina-card p-4 fade-slide" style={{animationDelay: '0.2s'}}><div className="flex justify-between items-center mb-2 text-[#FF8DA1]"><div className="flex items-center gap-2"><Icons.Food size={18} /> <span className="font-bold">好吃的</span></div><button onClick={() => openMap(day.food)} className="text-[#6B4D57]/50 hover:text-[#6B4D57]"><Icons.MapPin size={16}/></button></div><textarea className="cute-input text-md resize-none h-16" placeholder="午餐、晚餐、點心..." value={day.food} onChange={e => updateDay('food', e.target.value)} /></div>
-            {dayExpenses.length > 0 && <div className="space-y-2 pt-2 fade-slide"><div className="text-xs font-bold opacity-40 ml-2">今日明細</div>{dayExpenses.map(e => (<div key={e.id} className="bg-white/80 border border-[#6B4D57]/10 rounded-xl p-3 flex justify-between items-center shadow-sm"><div><div className="flex items-center gap-2"><span className="text-[10px] text-[#6B4D57] bg-gray-100 px-1 rounded">{e.time}</span><span className="font-bold">{e.item}</span></div><div className="flex gap-1 mt-1"><span className="text-[10px] text-[#6B4D57] bg-[#FFF0F5] px-2 py-0.5 rounded-full border border-[#FFB6C1]/50">{e.method}</span>{e.note && <span className="text-[10px] text-gray-400">({e.note})</span>}</div></div><div className="flex items-center gap-3"><span className="font-black opacity-60 text-sm">{e.currency} {e.amount}</span><button onClick={() => deleteExpense(e.id)} className="opacity-20 hover:opacity-100 hover:text-red-400"><Icons.Trash size={14}/></button></div></div>))}</div>}
-          </div>
-          <button onClick={() => setShowReceipt(true)} className="scan-btn animate-[bounce_2s_infinite] shadow-lg"><span className="text-xl">🧾</span></button>
-          <button onClick={() => openAdd()} className="floating-btn shadow-lg"><Icons.Wallet size={28} /></button>
-          {showExpModal && <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center sm:items-center"><div className="bg-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-6 border-t-2 sm:border-2 border-[#6B4D57] shadow-2xl animate-[fadeSlide_0.3s]"><div className="flex justify-between items-center mb-4"><h3 className="font-bold text-xl">記一筆 ({day.date})</h3><button onClick={() => setShowExpModal(false)}><Icons.Cross /></button></div><div className="space-y-3"><input autoFocus placeholder="買了什麼？" className="w-full bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none text-lg" value={expForm.item} onChange={e=>setExpForm({...expForm, item: e.target.value})} /><div className="flex gap-2"><select className="w-24 bg-[#FFF0F5] p-3 rounded-xl font-bold outline-none text-center" value={expForm.currency} onChange={e=>setExpForm({...expForm, currency: e.target.value})}>{CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}</select><input type="number" placeholder="金額" className="flex-1 bg-[#FFF0F5] p-3 rounded-xl font-black outline-none text-2xl" value={expForm.amount} onChange={e=>setExpForm({...expForm, amount: e.target.value})} /></div><div className="grid grid-cols-2 gap-2"><div><label className="text-xs font-bold opacity-50 ml-1">支付</label><select className="w-full bg-[#FFF0F5] p-2 rounded-xl font-bold text-sm outline-none text-[#6B4D57]" value={expForm.method} onChange={e=>setExpForm({...expForm, method: e.target.value})}>{settings.payments.map(m => <option key={m} value={m}>{m}</option>)}</select></div><div><label className="text-xs font-bold opacity-50 ml-1">時間</label><input type="time" className="w-full bg-[#FFF0F5] p-2 rounded-xl font-bold text-sm outline-none text-[#6B4D57]" value={expForm.time} onChange={e=>setExpForm({...expForm, time: e.target.value})} /></div></div><div className="grid grid-cols-2 gap-2"><div><label className="text-xs font-bold opacity-50 ml-1">類別</label><select className="w-full bg-[#FFF0F5] p-2 rounded-xl font-bold text-sm outline-none text-[#6B4D57]" value={expForm.category} onChange={e=>setExpForm({...expForm, category: e.target.value})}>{['飲食','交通','住宿','購物','門票','其他'].map(c=><option key={c} value={c}>{c}</option>)}</select></div></div><input placeholder="備註..." className="w-full bg-[#FFF0F5] p-2 rounded-xl text-sm outline-none" value={expForm.note} onChange={e=>setExpForm({...expForm, note: e.target.value})} /><button onClick={addExpense} className="w-full bg-[#FF69B4] text-white border-2 border-[#6B4D57] rounded-xl py-3 font-bold mt-2 shadow-[2px_2px_0px_#6B4D57] active:translate-y-1 active:shadow-none transition-all">記下來！</button></div></div></div>}
-          {showReceipt && <ReceiptModal onClose={() => setShowReceipt(false)} onConfirm={handleReceiptData} />}
-        </div>
-      );
-    }
+            const handleImportNames = () => {
+                const lines = bulkNames.split('\n').map(x=>x.trim()).filter(x=>x);
+                if(lines.length && confirm(`確定匯入 ${lines.length} 位學生？舊名單將被覆蓋。`)) {
+                    setStudents(lines.map((n,i) => ({id: i+1, name: n})));
+                    alert('匯入完成');
+                    setBulkNames('');
+                }
+            };
 
-    // --- Shopping View (Same as V9.1) ---
-    function ShoppingView({ trip, onUpdate }) {
-      const [type, setType] = useState('self'); const [newItem, setNewItem] = useState(''); const [newPrice, setNewPrice] = useState(''); const [newPriority, setNewPriority] = useState('must'); const [newNote, setNewNote] = useState('');
-      const list = (trip.shoppingList || []).filter(i => i.type === type);
-      const sortedList = [...list].sort((a, b) => (a.bought === b.bought ? ({ 'must': 0, 'want': 1, 'maybe': 2 }[a.priority] - { 'must': 0, 'want': 1, 'maybe': 2 }[b.priority]) : (a.bought ? 1 : -1)));
-      const boughtCount = list.filter(i => i.bought).length; const progress = list.length > 0 ? (boughtCount / list.length) * 100 : 0;
-      const addItem = () => { if(!newItem) return; onUpdate({ shoppingList: [...(trip.shoppingList || []), { id: Date.now(), name: newItem, price: newPrice, priority: newPriority, type, note: newNote, bought: false }] }); setNewItem(''); setNewPrice(''); setNewNote(''); };
-      const toggleBuy = (id) => onUpdate({ shoppingList: trip.shoppingList.map(i => i.id === id ? { ...i, bought: !i.bought } : i) });
-      const deleteItem = (id) => { if(confirm('刪除?')) onUpdate({ shoppingList: trip.shoppingList.filter(i => i.id !== id) }); };
-      const shareLine = () => { let text = `🛍️ ${type==='self'?'自用':'代購'}清單：\n`; sortedList.filter(i => !i.bought).forEach(i => text += `${i.priority==='must'?'🔴':i.priority==='want'?'🟡':'🟢'} ${i.name} ${i.price?`(¥${i.price})`:''} ${i.note?`[${i.note}]`:''}\n`); window.open('https://line.me/R/msg/text/?' + encodeURIComponent(text)); };
-      const convertToExpense = (item) => { const cost = prompt(`金額 (日幣):`, item.price || ''); if(cost) { onUpdate({ expenses: [...trip.expenses, { id: Date.now(), date: trip.itinerary[0].date, item: item.name + (item.note ? ` (${item.note})` : ''), amount: parseFloat(cost), currency: 'JPY', category: '購物', method: '現金', platform: '現場支付', time: '12:00' }], shoppingList: trip.shoppingList.map(i => i.id === item.id ? { ...i, bought: true } : i) }); alert('已轉入記帳！'); } };
-      return (
-        <div className="h-full flex flex-col"><div className="p-4 bg-[#FFF0F5]"><div className="flex rounded-2xl bg-white p-1 border-2 border-[#6B4D57] mb-3"><button onClick={() => setType('self')} className={`shop-tab ${type === 'self' ? 'active' : ''}`}>🙋‍♀️ 自用</button><button onClick={() => setType('proxy')} className={`shop-tab ${type === 'proxy' ? 'active' : ''}`}>🤝 代購</button></div><div className="flex items-center gap-2 mb-1"><div className="progress-container flex-1"><div className="progress-fill" style={{width: `${progress}%`}}></div></div><span className="text-xs font-bold text-[#6B4D57]">{boughtCount}/{list.length}</span></div></div><div className="flex-1 overflow-y-auto p-4 pt-0 pb-24 space-y-4 no-scrollbar"><div className={`regina-card p-4 border-t-4 ${type==='self'?'border-t-[#FF69B4]':'border-t-[#87CEEB]'}`}><div className="flex flex-col gap-2"><input className="cute-input text-lg border-b border-[#FFB6C1]" placeholder="想買什麼..." value={newItem} onChange={e=>setNewItem(e.target.value)} /><div className="flex gap-2"><select className="bg-[#FFF0F5] rounded-lg text-xs font-bold p-1 outline-none" value={newPriority} onChange={e=>setNewPriority(e.target.value)}>{PRIORITIES.map(p=><option key={p.id} value={p.id}>{p.label}</option>)}</select><input className="cute-input w-20 border-b border-[#FFB6C1]" type="number" placeholder="¥預算" value={newPrice} onChange={e=>setNewPrice(e.target.value)} /><input className="cute-input border-b border-[#FFB6C1]" placeholder={type==='self'?'商店?':'誰的?'} value={newNote} onChange={e=>setNewNote(e.target.value)} /></div><button onClick={addItem} className={`w-full py-2 rounded-xl text-white font-bold mt-2 shadow-sm active:translate-y-1 transition-all ${type==='self'?'bg-[#FF69B4]':'bg-[#87CEEB]'}`}>加入清單</button></div></div><div className="flex justify-end"><button onClick={shareLine} className="bg-[#06C755] text-white text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm active:scale-95"><Icons.Share size={12}/> Line</button></div><div className="space-y-2">{sortedList.map(item => (<div key={item.id} className={`bg-white border-2 border-[#6B4D57] rounded-xl p-3 flex justify-between items-center shadow-[3px_3px_0px_#eee] ${item.bought ? 'opacity-50 grayscale' : ''}`}><div className="flex items-center gap-3"><button onClick={() => toggleBuy(item.id)} className={`w-6 h-6 rounded-full border-2 border-[#6B4D57] flex items-center justify-center ${item.bought?'bg-[#6B4D57] text-white':''}`}>{item.bought && '✓'}</button><div><div className="flex items-center gap-1"><span className={`w-2 h-2 rounded-full`} style={{background: PRIORITIES.find(p=>p.id===item.priority).color}}></span><span className={`font-bold text-lg block ${item.bought?'line-through':''}`}>{item.name}</span></div><span className="text-xs opacity-60">{item.price ? `¥${item.price}` : ''} {item.note ? ` • ${item.note}` : ''}</span></div></div><div className="flex gap-2">{item.bought && <button onClick={() => convertToExpense(item)} className="text-xs bg-[#FF69B4] text-white px-2 py-1 rounded-full">記帳</button>}<button onClick={() => deleteItem(item.id)} className="text-gray-300 hover:text-red-400"><Icons.Trash size={16}/></button></div></div>))}</div></div></div>
-      );
-    }
+            const handleAddSubject = () => {
+                if(newSubName) {
+                    setSubjects([...subjects, {id: `s_${Date.now()}`, label: newSubName}]);
+                    setNewSubName('');
+                }
+            };
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+            // --- 報表邏輯 ---
+            const getStats = (sid) => {
+                // 統計近5日
+                const dates = [];
+                const d = new Date(currentDate);
+                for(let i=0; i<5; i++) {
+                    dates.push(new Date(d).toISOString().split('T')[0]);
+                    d.setDate(d.getDate() - 1);
+                }
+                
+                let count = { att: 0, miss: 0, beh: 0 };
+                let details = [];
+
+                dates.forEach(dateStr => {
+                    const data = allData[dateStr];
+                    if(!data) return;
+                    // 缺勤
+                    if(data.attendanceData) Object.values(data.attendanceData).forEach(arr => { if(arr?.includes(sid)) count.att++; });
+                    // 缺交
+                    if(data.missingData) Object.values(data.missingData).forEach(arr => { if(arr?.includes(sid)) count.miss++; });
+                    // 違規
+                    if(data.classLogData) {
+                        Object.entries(data.classLogData).forEach(([pid, pLog]) => {
+                            Object.entries(pLog).forEach(([bid, arr]) => {
+                                if(arr?.includes(sid)) {
+                                    count.beh++;
+                                    const bName = behaviors.find(b=>b.id===bid)?.label || '其他';
+                                    const pName = PERIODS.find(p=>p.id===pid)?.label || pid;
+                                    details.push(`${dateStr.slice(5)} ${pName}:${bName}`);
+                                }
+                            });
+                        });
+                    }
+                });
+                return { count, details };
+            };
+
+            // --- 匯出 CSV ---
+            const exportDaily = () => {
+                let csv = `\uFEFF日期,${currentDate},週次,${week},值日,${dutyOfficer}/${dutyStudent}\n\n【考勤】\n`;
+                ATTENDANCE_TYPES.forEach(t => {
+                    const names = (attendanceData[t.id]||[]).map(id=>students.find(s=>s.id===id)?.name).join(' ');
+                    if(names) csv += `${t.label},${names}\n`;
+                });
+                csv += `\n【缺交】\n`;
+                [...CONTACT_BOOK_TYPES, ...subjects].forEach(t => {
+                    const names = (missingData[t.id]||[]).map(id=>students.find(s=>s.id===id)?.name).join(' ');
+                    if(names) csv += `${t.label},${names}\n`;
+                });
+                csv += `\n【課堂】\n`;
+                PERIODS.forEach(p => {
+                    const note = periodNotes[p.id] || '';
+                    let hasLog = false;
+                    behaviors.forEach(b => {
+                        const list = classLogData[p.id]?.[b.id] || [];
+                        if(list.length) {
+                            hasLog = true;
+                            csv += `${p.label},${b.label},${list.map(id=>students.find(s=>s.id===id)?.name).join(' ')}\n`;
+                        }
+                    });
+                    if(note) csv += `${p.label},備註,${note}\n`;
+                });
+                const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `日誌_${currentDate}.csv`;
+                link.click();
+            };
+
+            // --- 介面渲染區 ---
+            // 1. 學生選擇器 Modal
+            const SelectorModal = () => {
+                if(!selectorConfig.open) return null;
+                const { type, category, period } = selectorConfig;
+                const selected = getSelectedList();
+                let title = '';
+                if(type === 'att') title = ATTENDANCE_TYPES.find(x=>x.id===category)?.label;
+                if(type === 'miss') title = [...CONTACT_BOOK_TYPES, ...subjects].find(x=>x.id===category)?.label + ' 缺交';
+                if(type === 'log') title = `${PERIODS.find(x=>x.id===period)?.label} ${behaviors.find(x=>x.id===category)?.label}`;
+
+                return (
+                    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center animate-in fade-in duration-200">
+                        <div className="bg-[#FEF9F2] w-full md:w-[480px] h-[85vh] md:h-[600px] rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl">
+                            <div className="p-4 border-b-2 border-orange-100 flex justify-between items-center bg-yellow-50 rounded-t-2xl">
+                                <div>
+                                    <h3 className="text-xl font-bold text-gray-800">點選學生</h3>
+                                    <p className="text-sm text-orange-600 font-bold">{title}</p>
+                                </div>
+                                <button onClick={()=>setSelectorConfig({...selectorConfig, open:false})} className="p-2 bg-white rounded-full shadow-sm"><X/></button>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-4 grid grid-cols-4 md:grid-cols-5 gap-3 content-start">
+                                {students.map(s => (
+                                    <button key={s.id} onClick={()=>toggleStudent(s.id)}
+                                        className={`p-2 rounded-xl border-2 transition-all flex flex-col items-center justify-center min-h-[64px]
+                                            ${selected.includes(s.id) ? 'bg-orange-500 border-orange-600 text-white shadow-lg scale-105' : 'bg-white border-orange-100 text-gray-700 hover:bg-orange-50'}`}>
+                                        <span className="text-xs opacity-75">{s.id}</span>
+                                        <span className="font-bold">{s.name}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="p-4 border-t border-orange-100 bg-white rounded-b-2xl">
+                                <button onClick={()=>setSelectorConfig({...selectorConfig, open:false})} className="w-full btn-3d bg-green-400 text-white py-3 rounded-xl font-bold text-xl">完成 ({selected.length})</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // 2. 畫面: 點名 (Basic)
+            const renderBasic = () => (
+                <div className="space-y-6 pb-32">
+                    {/* 日期卡片 */}
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-orange-100 flex flex-col gap-3">
+                        <div className="flex gap-2">
+                            <div className="flex-1">
+                                <label className="text-xs font-bold text-gray-500 mb-1 block">日期</label>
+                                <input type="date" value={currentDate} onChange={e=>setCurrentDate(e.target.value)} className="input-ios" />
+                            </div>
+                            <div className="w-1/3">
+                                <label className="text-xs font-bold text-gray-500 mb-1 block">週次</label>
+                                <input type="number" value={week} onChange={e=>setWeek(e.target.value)} className="input-ios text-center" />
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <input placeholder="值日幹部" value={dutyOfficer} onChange={e=>setDutyOfficer(e.target.value)} className="input-ios" />
+                            <input placeholder="值日生" value={dutyStudent} onChange={e=>setDutyStudent(e.target.value)} className="input-ios" />
+                        </div>
+                    </div>
+
+                    {/* 考勤卡片 */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
+                        <div className="bg-orange-100 px-4 py-2 font-bold text-orange-800 flex items-center gap-2"><Clock size={18}/> 考勤</div>
+                        <div className="p-4 grid grid-cols-2 gap-3">
+                            {ATTENDANCE_TYPES.map(t => {
+                                const count = attendanceData[t.id]?.length || 0;
+                                return (
+                                    <button key={t.id} onClick={()=>setSelectorConfig({open:true, type:'att', category:t.id})}
+                                        className={`btn-3d p-3 rounded-xl flex items-center justify-between ${t.color}`}>
+                                        <span className="font-bold text-gray-700">{t.label}</span>
+                                        {count > 0 && <span className="bg-white px-2 py-0.5 rounded-full text-sm font-bold shadow-sm">{count}</span>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* 缺交卡片 */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
+                        <div className="bg-red-100 px-4 py-2 font-bold text-red-800 flex items-center gap-2"><FileWarning size={18}/> 缺交登記</div>
+                        <div className="p-4 space-y-4">
+                            <div className="grid grid-cols-2 gap-3">
+                                {CONTACT_BOOK_TYPES.map(t => (
+                                    <button key={t.id} onClick={()=>setSelectorConfig({open:true, type:'miss', category:t.id})}
+                                        className={`btn-3d p-3 rounded-xl flex justify-between ${t.color}`}>
+                                        <span className="font-bold">{t.label}</span>
+                                        <span className="bg-white/50 px-2 rounded text-sm">{missingData[t.id]?.length||0}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="border-t border-dashed border-gray-200 pt-3">
+                                <p className="text-xs font-bold text-gray-400 mb-2">科目作業</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {subjects.map(s => (
+                                        <button key={s.id} onClick={()=>setSelectorConfig({open:true, type:'miss', category:s.id})}
+                                            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 font-bold flex items-center gap-2 active:bg-gray-200 transition">
+                                            {s.label}
+                                            {(missingData[s.id]?.length > 0) && <span className="bg-red-500 text-white px-1.5 rounded text-xs">{missingData[s.id].length}</span>}
+                                        </button>
+                                    ))}
+                                    <button onClick={()=>setActiveTab('settings')} className="px-3 py-2 bg-gray-100 rounded-lg text-gray-400"><Plus size={18}/></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // 3. 畫面: 課堂紀錄 (Log)
+            const renderLog = () => (
+                <div className="space-y-4 pb-32">
+                    <div className="bg-white p-3 rounded-2xl shadow-sm border border-orange-100 flex items-center gap-2 sticky top-0 z-10">
+                        <Clock className="text-orange-500"/>
+                        <select value={currentLogPeriod} onChange={e=>setCurrentLogPeriod(e.target.value)} className="flex-1 bg-transparent text-xl font-bold outline-none text-gray-800">
+                            {PERIODS.map(p=><option key={p.id} value={p.id}>{p.label}</option>)}
+                        </select>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-orange-100">
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                            {behaviors.map(b => {
+                                const count = classLogData[currentLogPeriod]?.[b.id]?.length || 0;
+                                const Icon = ICON_MAP[b.icon] || AlertCircle;
+                                return (
+                                    <button key={b.id} onClick={()=>setSelectorConfig({open:true, type:'log', category:b.id, period:currentLogPeriod})}
+                                        className={`btn-3d flex flex-col items-center justify-center p-2 h-24 rounded-xl gap-1 relative ${b.color}`}>
+                                        <Icon size={24} className="opacity-70"/>
+                                        <span className="text-sm font-bold leading-tight">{b.label}</span>
+                                        {count > 0 && <span className="absolute top-1 right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full shadow">{count}</span>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <input type="text" placeholder="該節備註..." 
+                            value={periodNotes[currentLogPeriod]||''} 
+                            onChange={e=>setPeriodNotes({...periodNotes, [currentLogPeriod]:e.target.value})}
+                            className="input-ios bg-gray-50 border-0" />
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-orange-100">
+                        <h4 className="font-bold text-gray-500 mb-2">當日紀錄預覽</h4>
+                        <div className="text-sm space-y-2 text-gray-600">
+                            {behaviors.map(b => {
+                                const list = classLogData[currentLogPeriod]?.[b.id];
+                                if(!list?.length) return null;
+                                return <div key={b.id}><span className="font-bold text-orange-600">{b.label}:</span> {list.map(id=>students.find(s=>s.id===id)?.name).join(' ')}</div>
+                            })}
+                            {!Object.keys(classLogData[currentLogPeriod]||{}).length && <span className="text-gray-300">尚無紀錄</span>}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // 4. 畫面: 報表 (Report)
+            const renderReport = () => {
+                const s = students.find(x=>x.id===selectedReportStudent);
+                const { count, details } = getStats(selectedReportStudent);
+                return (
+                    <div className="space-y-4 pb-32">
+                         <div className="bg-yellow-50 p-4 rounded-2xl border border-yellow-200">
+                            <h3 className="font-bold text-yellow-800 mb-2">學生個案分析 (近5日)</h3>
+                            <select value={selectedReportStudent} onChange={e=>setSelectedReportStudent(Number(e.target.value))} className="input-ios mb-4">
+                                {students.map(s=><option key={s.id} value={s.id}>{s.id}. {s.name}</option>)}
+                            </select>
+                            <div className="flex gap-2 mb-4">
+                                <div className="flex-1 bg-white p-3 rounded-xl text-center"><div className="text-2xl font-bold text-gray-800">{count.att}</div><div className="text-xs text-gray-400">缺勤</div></div>
+                                <div className="flex-1 bg-white p-3 rounded-xl text-center"><div className="text-2xl font-bold text-red-500">{count.miss}</div><div className="text-xs text-gray-400">缺交</div></div>
+                                <div className="flex-1 bg-white p-3 rounded-xl text-center"><div className="text-2xl font-bold text-orange-500">{count.beh}</div><div className="text-xs text-gray-400">違規</div></div>
+                            </div>
+                            <div className="bg-white p-3 rounded-xl min-h-[100px] text-sm text-gray-600 mb-4">
+                                {details.length ? details.map((d,i)=><div key={i}>• {d}</div>) : <div className="text-gray-300 text-center py-4">近期表現良好</div>}
+                            </div>
+                            <button onClick={()=>{
+                                const msg = `${s.name} 家長您好，本週在校狀況：\n缺勤${count.att}次，缺交${count.miss}項，違規${count.beh}次。\n${details.join('\n')}`;
+                                navigator.clipboard.writeText(msg).then(()=>alert('已複製通知文字'));
+                            }} className="btn-3d w-full bg-green-500 text-white py-3 rounded-xl font-bold">複製家長通知</button>
+                        </div>
+                        <button onClick={exportDaily} className="btn-3d w-full bg-blue-500 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2">
+                            <Download/> 下載今日日誌 (Excel)
+                        </button>
+                    </div>
+                );
+            };
+
+            // 5. 畫面: 設定 (Settings)
+            const renderSettings = () => (
+                <div className="space-y-6 pb-32">
+                    <div className="bg-white p-4 rounded-2xl shadow-sm">
+                        <h3 className="font-bold mb-4 flex items-center gap-2"><UserCog/> 學生名單管理</h3>
+                        <textarea className="input-ios h-32 mb-2" placeholder="一行一個名字..." value={bulkNames} onChange={e=>setBulkNames(e.target.value)}></textarea>
+                        <button onClick={handleImportNames} className="btn-3d bg-gray-800 text-white px-4 py-2 rounded-lg text-sm w-full">匯入名單 (會覆蓋舊資料)</button>
+                    </div>
+                    <div className="bg-white p-4 rounded-2xl shadow-sm">
+                        <h3 className="font-bold mb-4 flex items-center gap-2"><BookOpen/> 科目管理</h3>
+                        <div className="flex gap-2 mb-4">
+                            <input className="input-ios" placeholder="新科目" value={newSubName} onChange={e=>setNewSubName(e.target.value)}/>
+                            <button onClick={handleAddSubject} className="bg-green-500 text-white px-4 rounded-lg font-bold">新增</button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {subjects.map(s => (
+                                <div key={s.id} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                                    {s.label}
+                                    <button onClick={()=>{if(confirm('刪除?')) setSubjects(subjects.filter(x=>x.id!==s.id))}} className="text-gray-400"><X size={14}/></button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="bg-orange-50 p-4 rounded-2xl text-sm text-orange-800">
+                        <p className="font-bold mb-1">關於本地儲存</p>
+                        <p>資料皆儲存在您的手機/平板中 (Local Storage)，不會上傳雲端。請勿清除 Safari 網站資料，否則資料會消失。建議每週五匯出 Excel 備份。</p>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="w-full md:max-w-4xl mx-auto h-full flex flex-col">
+                    {/* Header */}
+                    <header className="px-5 pt-4 pb-2 bg-[#FEF9F2] shrink-0">
+                        <div className="flex justify-between items-center">
+                            <h1 className="text-3xl font-black text-[#4B2C20] tracking-wider flex items-center gap-2">
+                                <span className="bg-[#F6E05E] px-2 rounded-lg transform -rotate-2 inline-block shadow-sm">班級</span>
+                                小管家
+                            </h1>
+                            <div className="text-xs font-bold text-gray-400 border border-gray-200 px-2 py-1 rounded-full">Pro v2.0</div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="flex-1 overflow-y-auto px-5 pt-2" ref={scrollRef}>
+                        {activeTab === 'basic' && renderBasic()}
+                        {activeTab === 'log' && renderLog()}
+                        {activeTab === 'report' && renderReport()}
+                        {activeTab === 'settings' && renderSettings()}
+                    </main>
+
+                    {/* Modal */}
+                    <SelectorModal />
+
+                    {/* Tab Bar */}
+                    <nav className="fixed bottom-6 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-[480px] bg-white/90 backdrop-blur-md border border-gray-200 rounded-3xl shadow-xl p-2 flex justify-between items-end z-40">
+                        {[
+                            {id:'basic', icon:User, label:'點名'},
+                            {id:'log', icon:Edit3, label:'紀錄'},
+                            {id:'report', icon:FileSpreadsheet, label:'報表'},
+                            {id:'settings', icon:Settings, label:'設定'}
+                        ].map(tab => {
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button key={tab.id} onClick={()=>setActiveTab(tab.id)}
+                                    className={`flex-1 flex flex-col items-center gap-1 py-2 transition-all duration-300 ${isActive ? '-translate-y-3' : 'opacity-50'}`}>
+                                    <div className={`p-3 rounded-full shadow-sm transition-all ${isActive ? 'bg-[#4B2C20] text-white scale-110' : 'bg-transparent text-gray-600'}`}>
+                                        <tab.icon size={24} strokeWidth={isActive?3:2}/>
+                                    </div>
+                                    {isActive && <span className="text-[10px] font-bold text-[#4B2C20]">{tab.label}</span>}
+                                </button>
+                            )
+                        })}
+                    </nav>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
